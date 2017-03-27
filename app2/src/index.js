@@ -1,5 +1,6 @@
-import dva from 'dva';
-import './index.css';
+import dva, { connect } from 'dva';
+import { Router, Route } from 'dva/router';
+import React from 'react';
 
 // 1. Initialize
 const app = dva();
@@ -8,10 +9,38 @@ const app = dva();
 // app.use({});
 
 // 3. Model
-// app.model(require('./models/example'));
+app.model({
+	namespace : 'count',
+	state : 0,
+	reducers : {
+		add(count) { return count + 1; },
+		minus(count) { return count - 1; },
+	},
+});
+
+//view
+const App = connect(({ count }) => ({
+	count,
+}))((props) => {
+	return (
+		<div>
+			<h2>{ props.count }</h2>
+			<button key="add" onClick={() => { props.dispatch({ type : 'count/add'}); }}>+</button>
+			<button key="minus" onClick={() => { props.dispatch({ type : 'count/minus'}); }}>-</button>
+		</div>
+	);
+});
+
+
 
 // 4. Router
-app.router(require('./router'));
+app.router(({ history }) => {
+	return (
+		<Router history={history}>
+			<Route path="/" component={App}/>
+		</Router>
+	);
+});
 
 // 5. Start
 app.start('#root');
