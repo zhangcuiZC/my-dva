@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-// import { connect } from 'dva';
+import { connect } from 'dva';
 
 import UserList from '../components/Users/UserList';
 import UserSearch from '../components/Users/UserSearch';
@@ -7,30 +7,19 @@ import UserModal from '../components/Users/UserModal';
 
 import styles from './Users.css';
 
-function Users() {
+function Users({ location, dispatch, users }) {
+
+	const {
+		loading, list, total, current, 
+		currentItem, modalVisible, modalType
+	} = users;
 
 	const userSearchProps = {};
 	const userListProps = {
-		total: 3,
-		current: 1,
-		loading: false,
-		dataSource: [
-			{
-				name: '张三',
-				age: 23,
-				address: '成都',
-			},
-			{
-				name: '李四',
-				age: 24,
-				address: '杭州',
-			},
-			{
-				name: '王五',
-				age: 25,
-				address: '上海',
-			},
-		],
+		dataSource: list,
+		total,
+		loading,
+		current,
 	};
 	const userModalProps = {};
 
@@ -47,4 +36,8 @@ Users.propTypes = {
 	users: PropTypes.object,
 };
 
-export default Users;
+function mapStateToProps({ users }) {
+	return {users};
+}
+
+export default connect(mapStateToProps)(Users);
