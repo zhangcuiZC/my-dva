@@ -1,10 +1,5 @@
 import { hashHistory } from 'dva/router';
-
-import request from '../utils/request';
-import qs from 'qs';
-async function query(params) {
-	return request(`/api/users?{qs.stringify(params)}`);
-}
+import { query } from '../services/users';
 
 export default {
 	namespace: 'users',
